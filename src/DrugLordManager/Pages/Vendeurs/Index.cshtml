@@ -1,0 +1,207 @@
+﻿@page
+@using DrugLordManager.Data;
+@model DrugLordManager.Pages.Vendeurs.IndexModel
+@{
+    ViewData["Title"] = "Vendeurs";
+}
+
+<h1><i class="fa-solid fa-dollar-sign"></i> Vendeurs</h1>
+<p>Un bon vendeur est un vendeur... en vie !</p>
+
+<a href="/Vendeurs">Affichage par défaut</a>
+<br />
+<a href="/Vendeurs?tri=pseudo">Trier par pseudonyme</a>
+<br />
+<a href="/Vendeurs?tri=quartierville">Trier par ville et quartier</a>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Pseudonyme</th>
+            <th>Statut</th>
+            <th>Niveau de fiabilité</th>
+            <th>Quartier opéré</th>
+            <th>Ville opérée</th>
+            <th>Détails</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vendeur in Model.Vendeurs)
+        {
+            <tr>
+                <td>@vendeur.Pseudonyme</td>
+                <td>@vendeur.Statut</td>
+                <td>@vendeur.NiveauFiabilité <a class="btn btn-outline-secondary" href="/Vendeurs/Modifier?idVendeur=@vendeur.Id">Modifier</a></td>
+                <td>@vendeur.NomQuartier</td>
+                <td>@vendeur.NomVille</td>
+                <td><button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#detailVendeur-@vendeur.Id">Détails</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#vendeursVilleQuartier" role="button" aria-expanded="false" aria-controls="vendeursVilleQuartier">
+        Vendeurs par ville et quartier
+    </a>
+</p>
+<div class="collapse" id="vendeursVilleQuartier">
+    <h3>Vendeurs par ville et quartier</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Quartier</th>
+                <th>Nombre de vendeurs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vendeur in AccèsDonnées.VendeursNombreParVilleEtQuartier())
+            {
+                <tr>
+                    <td>@vendeur.NomVille</td>
+                    <td>@vendeur.NomQuartier</td>
+                    <td>@vendeur.NbVendeurs</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#vendeursVille" role="button" aria-expanded="false" aria-controls="vendeursVille">
+        Vendeurs par ville
+    </a>
+</p>
+<div class="collapse" id="vendeursVille">
+    <h3>Vendeurs par ville</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Nombre de vendeurs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vendeur in AccèsDonnées.VendeursNombreParVille())
+            {
+                <tr>
+                    <td>@vendeur.NomVille</td>
+                    <td>@vendeur.NbVendeurs</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#vendeursStatut" role="button" aria-expanded="false" aria-controls="vendeursStatut">
+        Vendeurs par statut
+    </a>
+</p>
+<div class="collapse" id="vendeursStatut">
+    <h3>Vendeurs par statut</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Statut</th>
+                <th>Nombre de vendeurs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vendeur in AccèsDonnées.VendeursNombreParStatut())
+            {
+                <tr>
+                    <td>@vendeur.Statut</td>
+                    <td>@vendeur.NbVendeurs</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@foreach (var vendeur in Model.Vendeurs)
+{
+    var montantMoyenTransactions = AccèsDonnées.VendeurMontantMoyenTransactions(vendeur.Id);
+    var evolutionNiveauFiabilité = AccèsDonnées.VendeurEvolutionNiveauFiabilité(vendeur.Id);
+    var transactions = AccèsDonnées.TransactionsParVendeur(vendeur.Id);
+
+    <div class="modal fade" id="detailVendeur-@vendeur.Id" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@vendeur.Pseudonyme</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Montant moyen des transactions: @montantMoyenTransactions.First().MontantMoyenPayé</p>
+
+                    <hr/>
+
+                    <p>Evolution du niveau de fiabilité</p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date de début</th>
+                                <th>Niveau de fiabilité</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var evolution in evolutionNiveauFiabilité)
+                            {
+                                <tr>
+                                    <td>@evolution.DateDebut</td>
+                                    <td>@evolution.NiveauFiabilité</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <hr/>
+
+                    <p>Détails transactions</p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Qualité du déroulement</th>
+                                <th>Remarque(s)</th>
+                                <th>Prix</th>
+                                <th>Montant payé</th>
+                                <th>Statut</th>
+                                <th>Vendeur</th>
+                                <th>Client</th>
+                                <th>Lieu</th>
+                                <th>Ville</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in transactions)
+                            {
+                                <tr>
+                                    <td>@transaction.Date.ToString("dd.MM.yyyy")</td>
+                                    <td>@transaction.QualitéDéroulement</td>
+                                    <td>@transaction.Remarque</td>
+                                    <td>@transaction.Prix</td>
+                                    <td>@transaction.MontantPayé</td>
+                                    <td>@transaction.Statut</td>
+                                    <td>@transaction.NomVendeur</td>
+                                    <td>@transaction.NomClient</td>
+                                    <td>@transaction.NomLieu</td>
+                                    <td>@transaction.NomVille</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,77 @@
+﻿@page
+@using DrugLordManager.Data;
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-center">
+    <h1 class="display-4"><i class="fa-solid fa-joint"></i> Drug Lord Manager V2.0 <i class="fa-solid fa-joint"></i></h1>
+    <p>I'm sniffing it !</p>
+
+    <h2><i class="fa-solid fa-house"></i> Dashboard</h2>
+    <h3>Vendeurs disponibles aujourd'hui</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Statut</th>
+                <th>Niveau de fiabilité</th>
+                <th>Quartier opéré</th>
+                <th>Ville opérée</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vendeur in AccèsDonnées.VendeursDisponiblesAujourdhui())
+            {
+                <tr>
+                    <td>@vendeur.Pseudonyme</td>
+                    <td>@vendeur.Statut</td>
+                    <td>@vendeur.NiveauFiabilité</td>
+                    <td>@vendeur.NomQuartier</td>
+                    <td>@vendeur.NomVille</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Transactions problématiques du mois</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Date de la transaction</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsMauvaisesTransactionsLorsDuMois())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                    <td>@client.Date.ToString("dd.MM.yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Produits en attente de livraison</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Date de livraison</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in AccèsDonnées.StockProduitsFuturs())
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.Quantité</td>
+                    <td>@produit.DateArrivée.ToString("dd.MM.yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

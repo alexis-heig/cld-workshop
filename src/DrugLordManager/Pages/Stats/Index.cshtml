@@ -1,0 +1,169 @@
+﻿@page
+@using DrugLordManager.Data;
+@using Newtonsoft.Json;
+@model DrugLordManager.Pages.Stats.IndexModel
+@{
+    ViewData["Title"] = "Stats";
+}
+
+<h1><i class="fa-solid fa-chart-simple"></i> Statistiques</h1>
+<p>Seulement pour ceux qui sont forts en math !</p>
+
+
+<div id="charts" style="margin:auto;">
+
+    <h3>Bénéfices</h3>
+    <div class="lineChart">
+        <canvas id="benefits"></canvas>
+    </div>
+
+
+    <h3 class="mt-5">Productivité</h3>
+        <div class="barChart">
+            <canvas id="productivity"></canvas>
+        </div>
+
+    <h3 class="mt-5">Statuts vendeurs</h3>
+    <div class="pieChart">
+        <canvas id="currentVendorsState"></canvas>
+    </div>
+</div>
+
+<style>
+    #quantity {
+        display:flex;
+        flex-direction: row;
+    }
+
+    #productivity{
+        max-width: 40vw;
+        max-height:30vh;
+    }
+
+    #vendors {
+      display:flex;
+      flex-direction: row;
+    }
+
+    #charts {
+        max-width: 40vw;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    @{
+        var montantTransactionsMois = AccèsDonnées.StatsMontantTotalTransactionsMois();
+        var prixTransactionsMois = AccèsDonnées.StatsPrixTransactionsMois();
+
+        var mois = montantTransactionsMois.Select(m => $"{m.Mois.ToString().PadLeft(2, '0')}.{m.Année}").ToArray();
+        var moisMontant = montantTransactionsMois.Select(m => m.Montant).ToArray();
+        var moisPrix = prixTransactionsMois.Select(m => m.Prix).ToArray();
+
+    }
+    
+    const months = @Html.Raw(JsonConvert.SerializeObject(mois));
+
+    const benefits = document.getElementById('benefits');
+    new Chart(benefits, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [
+                {
+                    label: 'montant total payé par mois',
+                    data: @Html.Raw(JsonConvert.SerializeObject(moisMontant)),
+                    fill: false,
+                    borderColor: 'red',
+                    tension: 0.1
+                },
+                {
+                    label: 'prix total par mois',
+                    data: @Html.Raw(JsonConvert.SerializeObject(moisPrix)),
+                    fill: false,
+                    borderColor: 'blue',
+                    tension: 0.1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Evolution de la différence entre montant payé et prix du total des transactions effectuées par mois'
+                }
+            }
+        }
+    });
+
+    @{
+        var nbTransactionsMois = AccèsDonnées.StatsTransactionsParMois().Select(m => m.NbTransactions).ToArray();
+        var nbBonnesTransactionsMois = AccèsDonnées.StatsNbBonnesTransactionsParMois().Select(m => m.NbTransactions).ToArray();
+    }
+    const productivity = document.getElementById('productivity');
+    new Chart(productivity, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: '# de transactions effectuées',
+                data: @Html.Raw(JsonConvert.SerializeObject(nbTransactionsMois)),
+                borderWidth: 1
+            },
+            {
+                type: 'line',
+                label: '# de transactions ok',
+                data: @Html.Raw(JsonConvert.SerializeObject(nbBonnesTransactionsMois)),
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'nombre de transactions effectuées par mois'
+                }
+            }
+        }
+    });
+
+    @{
+        var vendeursParStatut = AccèsDonnées.VendeursNombreParStatut().OrderBy(v => v.Statut);
+        var vendeursLabels = vendeursParStatut.Select(v => v.Statut).ToArray();
+        var vendeursStatuts = vendeursParStatut.Select(v => v.NbVendeurs).ToArray();
+    }
+    const currentVendorsState = document.getElementById('currentVendorsState');
+    new Chart(currentVendorsState, {
+        type: 'pie',
+        data: {
+            labels: @Html.Raw(JsonConvert.SerializeObject(vendeursLabels)),
+            datasets: [{
+                data: @Html.Raw(JsonConvert.SerializeObject(vendeursStatuts)),
+                backgroundColor: ['orange', 'green', 'red', 'grey'],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Statut actuel des vendeurs'
+                }
+            }
+        }
+    });
+</script>
+

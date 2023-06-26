@@ -1,0 +1,191 @@
+﻿@page
+@using DrugLordManager.Data;
+@model DrugLordManager.Pages.Produits.IndexModel
+@{
+    ViewData["Title"] = "Produits";
+}
+
+<h1><i class="fa-solid fa-joint"></i> Produits</h1>
+<p>La première dose est gratuite !</p>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prix unitaire</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var produit in AccèsDonnées.Produits())
+        {
+            <tr>
+                <td>@produit.Nom</td>
+                <td>@produit.PrixUnitaire</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#produitsPrixInferieur" role="button" aria-expanded="false" aria-controls="produitsPrixInferieur">
+        Produits dont le prix est inférieur au prix moyen
+    </a>
+</p>
+<div class="collapse" id="produitsPrixInferieur">
+    <h3>Produits dont le prix est inférieur au prix moyen</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix unitaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in AccèsDonnées.ProduitsPrixInferieurAuPrixMoyen())
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.PrixUnitaire</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#produitsPrixSuperieur" role="button" aria-expanded="false" aria-controls="produitsPrixSuperieur">
+        Produits dont le prix est supérieur au prix moyen
+    </a>
+</p>
+<div class="collapse" id="produitsPrixSuperieur">
+    <h3>Produits dont le prix est supérieur au prix moyen</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix unitaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in AccèsDonnées.ProduitsPrixSuperieurAuPrixMoyen())
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.PrixUnitaire</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#produitsJamaisVendus" role="button" aria-expanded="false" aria-controls="produitsJamaisVendus">
+        Produits jamais vendus
+    </a>
+</p>
+<div class="collapse" id="produitsJamaisVendus">
+    <h3>Produits jamais vendus</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix unitaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in AccèsDonnées.ProduitsJamaisVendus())
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.PrixUnitaire</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#produitsPrixMoyen" role="button" aria-expanded="false" aria-controls="produitsPrixMoyen">
+        Prix moyen des produits
+    </a>
+</p>
+<div class="collapse" id="produitsPrixMoyen">
+    <h3>Prix moyen des produits</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix unitaire</th>
+                <th>Prix moyen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in AccèsDonnées.ProduitsSelonPrixMoyen())
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.PrixUnitaire</td>
+                    <td>@produit.PrixMoyen</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#produitsAbsents" role="button" aria-expanded="false" aria-controls="produitsAbsents">
+        Produits absents du stock actuel
+    </a>
+</p>
+<div class="collapse" id="produitsAbsents">
+    <h3>Produits absents du stock actuel</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix unitaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stock in AccèsDonnées.StockProduitsAbsents())
+            {
+                <tr>
+                    <td>@stock.Nom</td>
+                    <td>@stock.PrixUnitaire</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#transactionTypeProduit" role="button" aria-expanded="false" aria-controls="transactionTypeProduit">
+        Nombre de transactions par type de produits
+    </a>
+</p>
+<div class="collapse" id="transactionTypeProduit">
+    <h3>Nombre de transactions par type de produits</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in AccèsDonnées.TransactionsNombreParTypesDeProduit())
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

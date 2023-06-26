@@ -1,0 +1,85 @@
+﻿@page
+@using DrugLordManager.Data;
+@model DrugLordManager.Pages.StockFournisseurs.IndexModel
+@{
+    ViewData["Title"] = "Stock & fournisseurs";
+}
+
+<h1><i class="fa-solid fa-box-open"></i> Stock & fournisseurs</h1>
+<p>Et n'oubliez pas de passer commande !</p>
+
+<h2>Stock actuel</h2>
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Qualité</th>
+            <th>Prix unitaire</th>
+            <th>Date d'arrivée</th>
+            <th>Fournisseur</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stock in AccèsDonnées.Stocks())
+        {
+            <tr>
+                <td>@stock.Nom</td>
+                <td>@stock.Quantité</td>
+                <td>@stock.Qualité</td>
+                <td>@stock.PrixUnitaire</td>
+                <td>@stock.DateArrivée.ToString("dd.MM.yyyy")</td>
+                <td>@stock.PseudoFournisseur</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#produitsAbsents" role="button" aria-expanded="false" aria-controls="produitsAbsents">
+        Produits absents du stock actuel
+    </a>
+</p>
+<div class="collapse" id="produitsAbsents">
+    <h3>Produits absents du stock actuel</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix unitaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stock in AccèsDonnées.StockProduitsAbsents())
+            {
+                    <tr>
+                        <td>@stock.Nom</td>
+                        <td>@stock.PrixUnitaire</td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<h2>Fournisseurs</h2>
+
+@{
+    var meilleurFournisseurTypeProduits = AccèsDonnées.StockMeilleursFournisseursSelonProduitsPrésent().First();
+    <h4><i class="fa-solid fa-circle-info"></i> Fournisseur ayant fournit le plus de type de produits différents: @meilleurFournisseurTypeProduits.Pseudonyme (@meilleurFournisseurTypeProduits.NbProduitsEnStock produits différents)</h4>
+}
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Pseudonyme</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var fournisseur in AccèsDonnées.Fournisseurs())
+        {
+            <tr>
+                <td>@fournisseur.Pseudonyme</td>
+            </tr>
+        }
+    </tbody>
+</table>

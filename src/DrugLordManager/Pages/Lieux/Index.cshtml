@@ -1,0 +1,234 @@
+﻿@page
+@using DrugLordManager.Data;
+@using System.Diagnostics;
+@model DrugLordManager.Pages.Lieux.IndexModel
+@{
+    ViewData["Title"] = "Lieux";
+}
+
+<h1><i class="fa-solid fa-location-dot"></i> Lieux</h1>
+<p>Une souche creuse est toujours plus sûre qu'un commissariat de police !</p>
+
+<a href="/Lieux">Affichage par défaut</a>
+<br />
+<a href="/Lieux?tri=surete">Trier par niveau de sûreté</a>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Lieu</th>
+            <th>Quartier</th>
+            <th>Ville</th>
+            <th>Niveau de sûreté</th>
+            <th>Détails</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lieu in Model.Lieux)
+        {
+            <tr>
+                <td>@lieu.NomLieu</td>
+                <td>@lieu.NomQuartier</td>
+                <td>@lieu.NomVille</td>
+                <td>@lieu.NiveauSureté</td>
+                <td><button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#detail-@lieu.Id">Détails</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#lieuxMinTransactions" role="button" aria-expanded="false" aria-controls="lieuxMinTransactions">
+        Lieux avec le minimum de transactions
+    </a>
+</p>
+<div class="collapse" id="lieuxMinTransactions">
+    <h3>Lieux avec le minimum de transactions</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lieu in AccèsDonnées.LieuxMinimumTransactions())
+            {
+                <tr>
+                    <td>@lieu.Nom</td>
+                    <td>@lieu.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#lieuxMaxTransactions" role="button" aria-expanded="false" aria-controls="lieuxMaxTransactions">
+        Lieux avec le maximum de transactions
+    </a>
+</p>
+<div class="collapse" id="lieuxMaxTransactions">
+    <h3>Lieux avec le maximum de transactions</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lieu in AccèsDonnées.LieuxMaximumTransactions())
+            {
+                <tr>
+                    <td>@lieu.Nom</td>
+                    <td>@lieu.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#nbLieuxVille" role="button" aria-expanded="false" aria-controls="nbLieuxVille">
+        Nombre de lieux par ville
+    </a>
+</p>
+<div class="collapse" id="nbLieuxVille">
+    <h3>Nombre de lieux par ville</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Nombre de lieux</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lieu in AccèsDonnées.LieuxNombreParVille())
+            {
+                <tr>
+                    <td>@lieu.NomVille</td>
+                    <td>@lieu.NbLieux</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#nbLieuxQuartierVille" role="button" aria-expanded="false" aria-controls="nbLieuxQuartierVille">
+        Nombre de lieux par quartier et ville
+    </a>
+</p>
+<div class="collapse" id="nbLieuxQuartierVille">
+    <h3>Nombre de lieux par quartier et ville</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Quartier</th>
+                <th>Nombre de lieux</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lieu in AccèsDonnées.LieuxNombreParQuartierEtVille())
+            {
+                <tr>
+                    <td>@lieu.NomVille</td>
+                    <td>@lieu.NomQuartier</td>
+                    <td>@lieu.NbLieux</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#nbLieuxNiveauSurete" role="button" aria-expanded="false" aria-controls="nbLieuxNiveauSurete">
+        Nombre de lieux par niveau de sûreté
+    </a>
+</p>
+<div class="collapse" id="nbLieuxNiveauSurete">
+    <h3>Nombre de lieux par niveau de sûreté</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Niveau de sûreté</th>
+                <th>Nombre de lieux</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lieu in AccèsDonnées.LieuxNombreParNiveauSureté())
+            {
+                <tr>
+                    <td>@lieu.NiveauSureté</td>
+                    <td>@lieu.NbLieux</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@foreach (var lieu in Model.Lieux)
+{
+    var transactions = AccèsDonnées.TransactionsParLieu(lieu.Id);
+
+    <div class="modal fade" id="detail-@lieu.Id" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@lieu.NomLieu (@lieu.NomQuartier - @lieu.NomVille)</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Détail transactions</p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Qualité du déroulement</th>
+                                <th>Remarque(s)</th>
+                                <th>Prix</th>
+                                <th>Montant payé</th>
+                                <th>Statut</th>
+                                <th>Vendeur</th>
+                                <th>Client</th>
+                                <th>Lieu</th>
+                                <th>Ville</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in transactions)
+                            {
+                                <tr>
+                                    <td>@transaction.Date.ToString("dd.MM.yyyy")</td>
+                                    <td>@transaction.QualitéDéroulement</td>
+                                    <td>@transaction.Remarque</td>
+                                    <td>@transaction.Prix</td>
+                                    <td>@transaction.MontantPayé</td>
+                                    <td>@transaction.Statut</td>
+                                    <td>@transaction.NomVendeur</td>
+                                    <td>@transaction.NomClient</td>
+                                    <td>@transaction.NomLieu</td>
+                                    <td>@transaction.NomVille</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

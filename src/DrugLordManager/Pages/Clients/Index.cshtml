@@ -1,0 +1,301 @@
+﻿@page
+@using DrugLordManager.Data;
+@model DrugLordManager.Pages.Clients.IndexModel
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<h1><i class="fa-solid fa-person"></i> Clients</h1>
+<p>Fidélisez-les, ... ou zigouillez-les !</p>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Pseudonyme</th>
+            <th>Détails</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model.Clients)
+        {
+            <tr>
+                <td>@client.Pseudonyme</td>
+                <td><button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#detail-@client.Id">Détails</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#clientsFiabiliteFaible" role="button" aria-expanded="false" aria-controls="clientsFiabiliteFaible">
+        Clients dont il faut se méfier (faible fiabilité)
+    </a>
+</p>
+<div class="collapse" id="clientsFiabiliteFaible">
+    <h3>Clients avec fiabilité faible</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsFiabiliteFaible())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#meilleursClients" role="button" aria-expanded="false" aria-controls="meilleursClients">
+        Meilleurs clients
+    </a>
+</p>
+<div class="collapse" id="meilleursClients">
+    <h3>Meilleurs clients</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsMeilleurs())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                    <td>@client.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#pireClients" role="button" aria-expanded="false" aria-controls="pireClients">
+        Pires clients
+    </a>
+</p>
+<div class="collapse" id="pireClients">
+    <h3>Pires clients</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsPires())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                    <td>@client.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#clientsFideles" role="button" aria-expanded="false" aria-controls="clientsFideles">
+        Clients les plus fidèles
+    </a>
+</p>
+<div class="collapse" id="clientsFideles">
+    <h3>Clients les plus fidèles</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Est client depuis</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsFideles())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                    <td>@client.Date.ToString("dd.MM.yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#clientsNouveaux" role="button" aria-expanded="false" aria-controls="clientsNouveaux">
+        Nouveaux clients
+    </a>
+</p>
+<div class="collapse" id="clientsNouveaux">
+    <h3>Nouveaux clients</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsNouveaux())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#clientsTransactions" role="button" aria-expanded="false" aria-controls="clientsTransactions">
+        Nombre de transactions par client
+    </a>
+</p>
+<div class="collapse" id="clientsTransactions">
+    <h3>Nombre de transactions par client</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsSelonNombresTransactions())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                    <td>@client.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#clientsTransactionsMontant" role="button" aria-expanded="false" aria-controls="clientsTransactionsMontant">
+        Montant moyen des transactions par client
+    </a>
+</p>
+<div class="collapse" id="clientsTransactionsMontant">
+    <h3>Montant moyen des transactions par client</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Montant moyen des transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsSelonMontantTransactions())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                    <td>@client.MontantMoyen</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#transactionsProblematiques" role="button" aria-expanded="false" aria-controls="transactionsProblematiques">
+        Transactions problématiques du mois
+    </a>
+</p>
+<div class="collapse" id="transactionsProblematiques">
+    <h3>Transactions problématiques du mois</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Pseudonyme client</th>
+                <th>Date de la transaction</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in AccèsDonnées.ClientsMauvaisesTransactionsLorsDuMois())
+            {
+                <tr>
+                    <td>@client.Pseudonyme</td>
+                    <td>@client.Date.ToString("dd.MM.yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@foreach (var client in Model.Clients)
+{
+    var transactions = AccèsDonnées.TransactionsParClient(client.Id);
+
+    <div class="modal fade" id="detail-@client.Id" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@client.Pseudonyme</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Détails transactions</p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Qualité du déroulement</th>
+                                <th>Remarque(s)</th>
+                                <th>Prix</th>
+                                <th>Montant payé</th>
+                                <th>Statut</th>
+                                <th>Vendeur</th>
+                                <th>Client</th>
+                                <th>Lieu</th>
+                                <th>Ville</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in transactions)
+                            {
+                                <tr>
+                                    <td>@transaction.Date.ToString("dd.MM.yyyy")</td>
+                                    <td>@transaction.QualitéDéroulement</td>
+                                    <td>@transaction.Remarque</td>
+                                    <td>@transaction.Prix</td>
+                                    <td>@transaction.MontantPayé</td>
+                                    <td>@transaction.Statut</td>
+                                    <td>@transaction.NomVendeur</td>
+                                    <td>@transaction.NomClient</td>
+                                    <td>@transaction.NomLieu</td>
+                                    <td>@transaction.NomVille</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

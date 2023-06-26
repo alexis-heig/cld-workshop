@@ -1,0 +1,177 @@
+﻿@page
+@using DrugLordManager.Data;
+@model DrugLordManager.Pages.Transactions.IndexModel
+@{
+    ViewData["Title"] = "Transactions";
+}
+
+<h1><i class="fa-solid fa-handshake"></i> Transactions</h1>
+<p>L'argent c'est le pouvoir !</p>
+
+<a href="/Transactions">Affichage par défaut</a>
+<br />
+<a href="/Transactions?tri=statut">Trier par statut</a>
+<br />
+<a href="/Transactions?tri=date">Trier par date</a>
+<br />
+<a href="/Transactions?tri=lieuxville">Trier par lieu et ville</a>
+<br />
+<a href="/Transactions?tri=vendeur">Trier par vendeur</a>
+<br />
+<a href="/Transactions?tri=client">Trier par client</a>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Qualité du déroulement</th>
+            <th>Remarque(s)</th>
+            <th>Prix</th>
+            <th>Montant payé</th>
+            <th>Statut</th>
+            <th>Vendeur</th>
+            <th>Client</th>
+            <th>Lieu</th>
+            <th>Ville</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model.Transactions)
+        {
+            <tr>
+                <td>@transaction.Date.ToString("dd.MM.yyyy")</td>
+                <td>@transaction.QualitéDéroulement</td>
+                <td>@transaction.Remarque</td>
+                <td>@transaction.Prix</td>
+                <td>@transaction.MontantPayé</td>
+                <td>@transaction.Statut</td>
+                <td>@transaction.NomVendeur</td>
+                <td>@transaction.NomClient</td>
+                <td>@transaction.NomLieu</td>
+                <td>@transaction.NomVille</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#transactionsVille" role="button" aria-expanded="false" aria-controls="transactionsVille">
+        Transactions par ville
+    </a>
+</p>
+<div class="collapse" id="transactionsVille">
+    <h3>Transactions par ville</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in AccèsDonnées.TransactionsParVille())
+            {
+                <tr>
+                    <td>@transaction.NomVille</td>
+                    <td>@transaction.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#transactionsQuartierVille" role="button" aria-expanded="false" aria-controls="transactionsQuartierVille">
+        Transactions par quartier et ville
+    </a>
+</p>
+<div class="collapse" id="transactionsQuartierVille">
+    <h3>Transactions par quartier et ville</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Quartier</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in AccèsDonnées.TransactionsParQuartierEtVille())
+            {
+                <tr>
+                    <td>@transaction.NomVille</td>
+                    <td>@transaction.NomQuartier</td>
+                    <td>@transaction.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#transactionsAnnee" role="button" aria-expanded="false" aria-controls="transactionsAnnee">
+        Transactions de cette année
+    </a>
+</p>
+<div class="collapse" id="transactionsAnnee">
+    <h3>Transactions de cette année</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Qualité du déroulement</th>
+                <th>Remarque(s)</th>
+                <th>Prix</th>
+                <th>Montant payé</th>
+                <th>Statut</th>
+                <th>Vendeur</th>
+                <th>Client</th>
+                <th>Lieu</th>
+                <th>Ville</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in AccèsDonnées.TransactionsCetteAnnée())
+            {
+                <tr>
+                    <td>@transaction.Date.ToString("dd.MM.yyyy")</td>
+                    <td>@transaction.QualitéDéroulement</td>
+                    <td>@transaction.Remarque</td>
+                    <td>@transaction.Prix</td>
+                    <td>@transaction.MontantPayé</td>
+                    <td>@transaction.Statut</td>
+                    <td>@transaction.NomVendeur</td>
+                    <td>@transaction.NomClient</td>
+                    <td>@transaction.NomLieu</td>
+                    <td>@transaction.NomVille</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#transactionTypeProduit" role="button" aria-expanded="false" aria-controls="transactionTypeProduit">
+        Nombre de transactions par type de produits
+    </a>
+</p>
+<div class="collapse" id="transactionTypeProduit">
+    <h3>Nombre de transactions par type de produits</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Nombre de transactions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in AccèsDonnées.TransactionsNombreParTypesDeProduit())
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.NbTransactions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

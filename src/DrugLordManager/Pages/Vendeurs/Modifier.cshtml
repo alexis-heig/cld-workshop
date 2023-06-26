@@ -1,0 +1,24 @@
+﻿@page
+@model DrugLordManager.Pages.Vendeurs.ModifierModel
+@{
+    ViewData["Title"] = "Vendeurs";
+}
+
+<h1>Modifier le niveau de fiabilité de @Model.Vendeur.Pseudonyme</h1>
+
+<p>Niveau de fiabilité actuel: @Model.Vendeur.NiveauFiabilité</p>
+
+<form method="post">
+
+    <input type="hidden" name="idVendeur" value="@Model.Vendeur.Id" />
+    <div class="form-group">
+        <label>Nouveau niveau de fiabilité</label>
+        <select asp-items="Model.NiveauxFiabilite" name="niveauFiabilite">
+
+        </select>
+    </div>
+
+    <a class="btn btn-secondary" href="/Vendeurs">Retour</a>
+    <input class="btn btn-primary" type="submit" value="Modifier" />
+
+</form>

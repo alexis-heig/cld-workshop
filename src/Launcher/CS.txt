@@ -1,0 +1,1 @@
+Server=druglordpg.postgres.database.azure.com;Database=druglordmanager;Port=5432;User Id=drugadmin;Password=<password>;Ssl Mode=Require;

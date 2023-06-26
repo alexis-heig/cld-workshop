@@ -1,0 +1,165 @@
+<div id="charts" style="margin:auto;">
+    <div class="lineChart">
+        <canvas id="benefits"></canvas>
+    </div>
+    <div class="barChart">
+      <canvas id="productivity"></canvas>
+    </div>
+    <div id="vendors">
+      <div class="pieChart">
+        <canvas id="currentVendorsState"></canvas>
+      </div>
+      <div class="lineChart">
+        <canvas id="fiabilite"></canvas>
+      </div>
+    </div>
+</div>
+<div>
+  <canvas id="test"></canvas>
+</div>
+
+<style>
+    #quantity {
+        display:flex;
+        flex-direction: row;
+    }
+
+    #productivity{
+        max-width: 40vw;
+        max-height:30vh;
+    }
+
+    #vendors {
+      display:flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    #charts {
+        max-width: 40vw;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const months = ['08.22', '09.22', '10.22', '11.22', '12.22', '01.23'];
+  
+  const benefits = document.getElementById('benefits');
+  new Chart(benefits, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        {
+            label: 'montant total payé par mois',
+            data: [65, 40, 0, 10, 120, 50, 35],
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+        },
+        {
+            label: 'prix total par mois',
+            data: [65, 59, 80, 81, 56, 55, 40],
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+        }
+    ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+            title: {
+                display: true,
+                text: 'Evolution de la différence entre montant payé et prix du total des transactions effectuées par mois'
+            }
+        }
+    }
+  });
+
+  const productivity = document.getElementById('productivity');
+  new Chart(productivity, {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [{
+        label: '# de transactions effectuées',
+        data: [12, 19, 25, 50, 75, 65],
+        borderWidth: 1
+      },
+      {
+            type: 'line',
+            label: '# de transactions ok',
+            data: [5, 10, 4, 25, 60, 45],
+        }],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+            title: {
+                display: true,
+                text: 'nombre de transactions effectuées par mois'
+            }
+        }
+    }
+  });
+
+  const currentVendorsState = document.getElementById('currentVendorsState');
+  new Chart(currentVendorsState, {
+    type: 'pie',
+    data: {
+      labels: ['en vie', 'mort', 'au trou', 'rangé'],
+      datasets: [{
+        data: [100, 30, 10, 20],
+        backgroundColor: ['green','red','orange','grey'],
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      plugins: {
+            title: {
+                display: true,
+                text: 'Statut actuel des vendeurs'
+            }
+        }
+    }
+  });
+
+  const fiabilite = document.getElementById('fiabilite');
+  new Chart(fiabilite, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+       
+            label: 'niveau de fiabilité',
+            data: [65, 40, 0, 10, 120, 50, 35],
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1
+
+      }]
+    },
+    options: {
+      plugins: {
+            title: {
+                display: true,
+                text: 'Niveau de fiabilité moyen des vendeurs'
+            }
+        }
+    }
+  });
+</script>
+
